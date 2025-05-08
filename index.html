@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Gráfico de Barras Empilhadas - 2024 e 2025</title>
+  <title>Gráfico de Barras Empilhadas</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <style>
@@ -10,12 +10,13 @@
       font-family: Arial, sans-serif;
       padding: 20px;
     }
-    canvas {
+    #grafico-container {
       max-width: 900px;
       height: 400px;
+      margin: auto;
     }
     table {
-      margin-top: 20px;
+      margin-top: 30px;
       border-collapse: collapse;
     }
     td, th {
@@ -24,15 +25,18 @@
       border: 1px solid #ccc;
     }
     input {
-      width: 50px;
+      width: 60px;
       text-align: right;
     }
   </style>
 </head>
 <body>
 
-<h2>Gráfico de Barras Empilhadas - 2024 e 2025</h2>
-<canvas id="meuGrafico"></canvas>
+<h2>Gráfico de Barras Empilhadas - 2024, 2025 e Procedente</h2>
+
+<div id="grafico-container">
+  <canvas id="meuGrafico"></canvas>
+</div>
 
 <table>
   <thead>
@@ -94,7 +98,7 @@
           stack: "2024"
         },
         {
-          label: "2025 Procedente", // aparece primeiro para ficar por cima
+          label: "2025 Procedente",
           backgroundColor: "#4CAF50",
           data: [...dadosIniciais["2025 Procedente"]],
           stack: "agrupado2025"
@@ -111,15 +115,22 @@
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { stacked: true },
+        x: {
+          stacked: true
+        },
         y: {
           stacked: true,
           beginAtZero: true,
-          title: { display: true, text: "Valores" }
+          title: {
+            display: true,
+            text: "Valores"
+          }
         }
       },
       plugins: {
-        legend: { position: "top" },
+        legend: {
+          position: "top"
+        },
         datalabels: {
           color: "#000",
           anchor: "end",
@@ -131,7 +142,7 @@
     plugins: [ChartDataLabels]
   };
 
-  let meuGrafico = new Chart(ctx, config);
+  const meuGrafico = new Chart(ctx, config);
 
   function atualizarGrafico() {
     config.data.datasets[0].data = [...dadosIniciais["2024"]];
