@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Gráfico Comparativo 2024 vs 2025</title>
+  <title>Gráfico Comparativo 2024 x 2025</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
     input { width: 50px; text-align: center; }
@@ -13,7 +13,7 @@
   </style>
 </head>
 <body>
-  <h2>Insira os valores</h2>
+  <h2>Preencha os valores mensais:</h2>
   <table>
     <thead>
       <tr>
@@ -26,26 +26,26 @@
     <tbody id="inputTable"></tbody>
   </table>
 
-  <canvas id="grafico" width="800" height="400"></canvas>
+  <canvas id="grafico" height="400"></canvas>
 
   <script>
-    const meses = ["Jan", "Fev", "Mar"];
-    const tableBody = document.getElementById("inputTable");
-
-    const inputs = {
-      "2024": [],
-      "2025": [],
-      "2025 Procedente": []
+    const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const dadosIniciais = {
+      "2024": [33, 34, 35, 33, 22, 32, 37, 28, 29, 22, 14, 14],
+      "2025": [12, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "2025 Procedente": [4, 8, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     };
 
-    // Cria as linhas da tabela com inputs
+    const inputs = { "2024": [], "2025": [], "2025 Procedente": [] };
+    const tableBody = document.getElementById("inputTable");
+
     meses.forEach((mes, i) => {
       const row = document.createElement("tr");
       row.innerHTML = `<td>${mes}</td>`;
       ["2024", "2025", "2025 Procedente"].forEach(ano => {
         const input = document.createElement("input");
         input.type = "number";
-        input.value = ano === "2024" ? [33, 34, 35][i] : ano === "2025" ? [12, 14, 15][i] : [4, 8, 10][i];
+        input.value = dadosIniciais[ano][i] || 0;
         input.addEventListener("input", updateChart);
         inputs[ano].push(input);
         const td = document.createElement("td");
@@ -62,20 +62,20 @@
       datasets: [
         {
           label: "2024",
-          backgroundColor: "skyblue",
-          data: [33, 34, 35]
+          backgroundColor: "#4fa3e3",
+          data: dadosIniciais["2024"]
         },
         {
           label: "2025",
-          backgroundColor: "orange",
-          data: [12, 14, 15],
-          stack: "stack2025"
+          backgroundColor: "#f7a541",
+          data: dadosIniciais["2025"],
+          stack: "2025"
         },
         {
           label: "2025 Procedente",
-          backgroundColor: "darkorange",
-          data: [4, 8, 10],
-          stack: "stack2025"
+          backgroundColor: "#f17c0f",
+          data: dadosIniciais["2025 Procedente"],
+          stack: "2025"
         }
       ]
     };
@@ -89,21 +89,22 @@
           tooltip: { enabled: true },
           legend: { position: "top" },
           datalabels: {
-            display: true,
             color: "#000",
-            font: { weight: "bold" },
             anchor: "end",
             align: "start",
             formatter: function(value, context) {
-              // Só mostrar o percentual no topo do agrupamento 2025
-              if (context.dataset.label === "2025 Procedente") {
-                const i = context.dataIndex;
-                const total2025 = data.datasets[1].data[i] + data.datasets[2].data[i];
-                const valor2024 = data.datasets[0].data[i];
-                if (valor2024 > 0) {
-                  const perc = Math.round((total2025 / valor2024) * 100);
-                  return perc + "%";
+              const datasetIndex = context.datasetIndex;
+              const dataIndex = context.dataIndex;
+              if (datasetIndex === 2) { // Apenas no topo do agrupamento
+                const v2024 = data.datasets[0].data[dataIndex];
+                const v2025 = data.datasets[1].data[dataIndex];
+                const vProc = data.datasets[2].data[dataIndex];
+                const total2025 = v2025 + vProc;
+                if (v2024 > 0 && total2025 > 0) {
+                  return `${Math.round((total2025 / v2024) * 100)}%`;
                 }
+              } else {
+                return value; // mostrar valor individual
               }
               return "";
             }
@@ -111,7 +112,11 @@
         },
         scales: {
           x: { stacked: true },
-          y: { beginAtZero: true }
+          y: {
+            stacked: false,
+            beginAtZero: true,
+            title: { display: true, text: "Valores" }
+          }
         }
       },
       plugins: [ChartDataLabels]
