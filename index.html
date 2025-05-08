@@ -64,19 +64,37 @@
           label: '2024',
           data: dados2024,
           backgroundColor: 'skyblue',
-          stack: '2024'
+          stack: '2024',
+          datalabels: {
+            color: 'white',
+            anchor: 'end',
+            align: 'start',
+            formatter: Math.round
+          }
         },
         {
           label: '2025',
           data: dados2025,
           backgroundColor: 'orange',
-          stack: '2025'
+          stack: '2025',
+          datalabels: {
+            color: 'white',
+            anchor: 'center',
+            align: 'center',
+            formatter: Math.round
+          }
         },
         {
           label: '2025 Procedente',
           data: procedente2025,
           backgroundColor: 'green',
-          stack: '2025'
+          stack: '2025',
+          datalabels: {
+            color: 'white',
+            anchor: 'center',
+            align: 'center',
+            formatter: Math.round
+          }
         },
         {
           label: '% sobre 2024',
@@ -85,12 +103,13 @@
           backgroundColor: 'transparent',
           stack: 'invisível',
           datalabels: {
-            anchor: 'end',
-            align: 'start',
             color: 'black',
+            anchor: 'end',
+            align: 'end',
             formatter: function(value) {
               return value > 0 ? value + '%' : '';
-            }
+            },
+            display: true
           }
         }
       ]
@@ -99,14 +118,7 @@
       responsive: true,
       plugins: {
         datalabels: {
-          display: function(context) {
-            return context.dataset.label !== '% sobre 2024';
-          },
-          color: '#fff',
-          font: {
-            weight: 'bold'
-          },
-          formatter: Math.round
+          display: true
         },
         tooltip: {
           callbacks: {
