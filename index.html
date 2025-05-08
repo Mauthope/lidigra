@@ -6,12 +6,38 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input { width: 50px; text-align: center; }
-    table { border-collapse: collapse; margin-bottom: 20px; }
-    th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: center; }
-    #grafico-container { width: 1000px; height: 400px; }
-    canvas { width: 100% !important; height: 100% !important; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    input {
+      width: 50px;
+      text-align: center;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 4px 6px;
+      text-align: center;
+    }
+
+    #grafico-container {
+      width: 1000px;
+      height: 400px;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 1000px !important;
+      height: 400px !important;
+      display: block;
+    }
   </style>
 </head>
 <body>
