@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gráfico Empilhado 2024 vs 2025</title>
+  <title>Gráfico Empilhado com Percentuais</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -17,7 +18,7 @@
       margin-bottom: 20px;
     }
     .input-group {
-      width: 150px;
+      width: 200px;
     }
     canvas {
       max-width: 100%;
@@ -48,7 +49,6 @@
 <script>
   const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
-  // Valores iniciais
   let dados2024 = [33, 34, 35, 33, 22, 32, 37, 28, 29, 22, 14, 14];
   let dados2025 = [12, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let procedente2025 = [4, 8, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -77,39 +77,71 @@
           data: procedente2025,
           backgroundColor: 'green',
           stack: '2025'
+        },
+        {
+          label: '% sobre 2024',
+          data: calcularPercentuais(dados2024, dados2025, procedente2025),
+          type: 'bar',
+          backgroundColor: 'transparent',
+          stack: 'invisível',
+          datalabels: {
+            anchor: 'end',
+            align: 'start',
+            color: 'black',
+            formatter: function(value) {
+              return value > 0 ? value + '%' : '';
+            }
+          }
         }
       ]
     },
     options: {
       responsive: true,
       plugins: {
+        datalabels: {
+          display: function(context) {
+            return context.dataset.label !== '% sobre 2024';
+          },
+          color: '#fff',
+          font: {
+            weight: 'bold'
+          },
+          formatter: Math.round
+        },
         tooltip: {
           callbacks: {
             label: function(ctx) {
-              const label = ctx.dataset.label || '';
-              return `${label}: ${ctx.raw}`;
+              return `${ctx.dataset.label}: ${ctx.raw}`;
             }
           }
+        },
+        legend: {
+          position: 'top'
         }
       },
       scales: {
-        x: {
-          stacked: true
-        },
+        x: { stacked: true },
         y: {
           beginAtZero: true,
           stacked: true
         }
       }
-    }
+    },
+    plugins: [ChartDataLabels]
   });
+
+  function calcularPercentuais(base, parte1, parte2) {
+    return base.map((val, i) => {
+      const total = parte1[i] + parte2[i];
+      return val > 0 ? Math.round((total / val) * 100) : 0;
+    });
+  }
 
   function atualizarGrafico() {
     const valor2024 = parseInt(document.getElementById('valor2024').value) || 0;
     const valor2025 = parseInt(document.getElementById('valor2025').value) || 0;
     const valorProcedente = parseInt(document.getElementById('valorProcedente').value) || 0;
 
-    // Atualiza só o mês de janeiro como exemplo
     dados2024[0] = valor2024;
     dados2025[0] = valor2025;
     procedente2025[0] = valorProcedente;
@@ -117,6 +149,7 @@
     grafico.data.datasets[0].data = dados2024;
     grafico.data.datasets[1].data = dados2025;
     grafico.data.datasets[2].data = procedente2025;
+    grafico.data.datasets[3].data = calcularPercentuais(dados2024, dados2025, procedente2025);
 
     grafico.update();
   }
