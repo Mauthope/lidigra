@@ -2,155 +2,133 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Gráfico de Barras Empilhadas</title>
+  <title>Gráfico Comparativo</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    #grafico-container {
-      max-width: 900px;
-      height: 400px;
-      margin: auto;
-    }
-    table {
-      margin-top: 30px;
-      border-collapse: collapse;
-    }
-    td, th {
-      padding: 5px;
-      text-align: center;
-      border: 1px solid #ccc;
-    }
-    input {
-      width: 60px;
-      text-align: right;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input { width: 50px; text-align: center; }
+    table { border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: center; }
+    #grafico-container { width: 1000px; height: 400px; }
+    canvas { width: 100% !important; height: 100% !important; }
   </style>
 </head>
 <body>
+  <h2>Preencha os valores mensais:</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Mês</th>
+        <th>2024</th>
+        <th>2025</th>
+        <th>2025 Procedente</th>
+      </tr>
+    </thead>
+    <tbody id="inputTable"></tbody>
+  </table>
 
-<h2>Gráfico de Barras Empilhadas - 2024, 2025 e Procedente</h2>
+  <div id="grafico-container">
+    <canvas id="grafico"></canvas>
+  </div>
 
-<div id="grafico-container">
-  <canvas id="meuGrafico"></canvas>
-</div>
+  <script>
+    const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const dadosIniciais = {
+      "2024": [33, 34, 35, 33, 22, 32, 37, 28, 29, 22, 14, 14],
+      "2025": [12, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "2025 Procedente": [4, 8, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    };
 
-<table>
-  <thead>
-    <tr>
-      <th>Mês</th>
-      <th>2024</th>
-      <th>2025</th>
-      <th>2025 Procedente</th>
-    </tr>
-  </thead>
-  <tbody id="tabelaEntrada"></tbody>
-</table>
+    const inputs = { "2024": [], "2025": [], "2025 Procedente": [] };
+    const tableBody = document.getElementById("inputTable");
 
-<script>
-  const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-
-  let dadosIniciais = {
-    "2024": [33, 34, 35, 33, 22, 32, 37, 28, 29, 22, 14, 14],
-    "2025": [12, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    "2025 Procedente": [4, 8, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  };
-
-  const tabela = document.getElementById("tabelaEntrada");
-
-  meses.forEach((mes, i) => {
-    const linha = document.createElement("tr");
-
-    const tdMes = document.createElement("td");
-    tdMes.textContent = mes;
-    linha.appendChild(tdMes);
-
-    ["2024", "2025", "2025 Procedente"].forEach((ano) => {
-      const td = document.createElement("td");
-      const input = document.createElement("input");
-      input.type = "number";
-      input.value = dadosIniciais[ano][i] || 0;
-      input.oninput = () => {
-        dadosIniciais[ano][i] = +input.value;
-        atualizarGrafico();
-      };
-      td.appendChild(input);
-      linha.appendChild(td);
+    meses.forEach((mes, i) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${mes}</td>`;
+      ["2024", "2025", "2025 Procedente"].forEach(ano => {
+        const input = document.createElement("input");
+        input.type = "number";
+        input.value = dadosIniciais[ano][i] || 0;
+        input.addEventListener("input", updateChart);
+        inputs[ano].push(input);
+        const td = document.createElement("td");
+        td.appendChild(input);
+        row.appendChild(td);
+      });
+      tableBody.appendChild(row);
     });
 
-    tabela.appendChild(linha);
-  });
+    const ctx = document.getElementById("grafico").getContext("2d");
 
-  const ctx = document.getElementById("meuGrafico").getContext("2d");
-
-  const config = {
-    type: "bar",
-    data: {
+    const chartData = {
       labels: meses,
       datasets: [
         {
           label: "2024",
           backgroundColor: "#4fa3e3",
           data: [...dadosIniciais["2024"]],
-          stack: "2024"
-        },
-        {
-          label: "2025 Procedente",
-          backgroundColor: "#4CAF50",
-          data: [...dadosIniciais["2025 Procedente"]],
-          stack: "agrupado2025"
+          datalabels: { align: 'end', anchor: 'end' }
         },
         {
           label: "2025",
           backgroundColor: "#f7a541",
           data: [...dadosIniciais["2025"]],
-          stack: "agrupado2025"
+          datalabels: { align: 'end', anchor: 'end' }
+        },
+        {
+          label: "2025 Procedente",
+          backgroundColor: "#4CAF50",
+          data: [...dadosIniciais["2025 Procedente"]],
+          datalabels: {
+            align: 'end',
+            anchor: 'end',
+            formatter: function(value, context) {
+              const i = context.dataIndex;
+              const v2024 = chartData.datasets[0].data[i] || 0;
+              const total2025 = (chartData.datasets[1].data[i] || 0) + (value || 0);
+              return v2024 > 0 ? `${Math.round((total2025 / v2024) * 100)}%` : '';
+            }
+          }
         }
       ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          stacked: true
+    };
+
+    const chart = new Chart(ctx, {
+      type: "bar",
+      data: chartData,
+      options: {
+        responsive: false,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "top" },
+          datalabels: {
+            color: "#000",
+            font: { weight: 'bold' }
+          }
         },
-        y: {
-          stacked: true,
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: "Valores"
+        scales: {
+          x: {
+            stacked: false,
+            title: { display: true, text: "Meses" }
+          },
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: "Valores" }
           }
         }
       },
-      plugins: {
-        legend: {
-          position: "top"
-        },
-        datalabels: {
-          color: "#000",
-          anchor: "end",
-          align: "start",
-          formatter: Math.round
-        }
-      }
-    },
-    plugins: [ChartDataLabels]
-  };
+      plugins: [ChartDataLabels]
+    });
 
-  const meuGrafico = new Chart(ctx, config);
-
-  function atualizarGrafico() {
-    config.data.datasets[0].data = [...dadosIniciais["2024"]];
-    config.data.datasets[1].data = [...dadosIniciais["2025 Procedente"]];
-    config.data.datasets[2].data = [...dadosIniciais["2025"]];
-    meuGrafico.update();
-  }
-</script>
-
+    function updateChart() {
+      meses.forEach((_, i) => {
+        chartData.datasets[0].data[i] = parseInt(inputs["2024"][i].value) || 0;
+        chartData.datasets[1].data[i] = parseInt(inputs["2025"][i].value) || 0;
+        chartData.datasets[2].data[i] = parseInt(inputs["2025 Procedente"][i].value) || 0;
+      });
+      chart.update();
+    }
+  </script>
 </body>
 </html>
