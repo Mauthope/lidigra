@@ -6,13 +6,38 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input { width: 50px; text-align: center; }
-    table { border-collapse: collapse; margin-bottom: 20px; }
-    th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: center; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+      padding: 30px;
+      color: #333;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    table {
+      border-collapse: collapse;
+      margin-bottom: 25px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      text-align: center;
+    }
+    input {
+      width: 55px;
+      padding: 4px;
+      text-align: center;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
     #grafico-container {
       width: 1000px;
-      height: 400px;
+      height: 450px;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
     canvas {
       width: 100% !important;
@@ -21,6 +46,7 @@
   </style>
 </head>
 <body>
+
   <h2>Preencha os valores mensais:</h2>
   <table>
     <thead>
@@ -72,21 +98,21 @@
       datasets: [
         {
           label: "2024",
-          backgroundColor: "#4fa3e3",
+          backgroundColor: "#1e88e5",
           data: [...dadosIniciais["2024"]],
-          stack: "2024"
+          stack: "ano"
         },
         {
           label: "2025",
-          backgroundColor: "#f7a541",
+          backgroundColor: "#ffb74d",
           data: [...dadosIniciais["2025"]],
-          stack: "2025"
+          stack: "ano2"
         },
         {
-          label: "2025 Procedente",
-          backgroundColor: "#4CAF50", // verde
+          label: "Procedente",
+          backgroundColor: "#4CAF50",
           data: [...dadosIniciais["2025 Procedente"]],
-          stack: "2025"
+          stack: "ano2"
         }
       ]
     };
@@ -98,36 +124,48 @@
         responsive: false,
         maintainAspectRatio: false,
         plugins: {
-          tooltip: { enabled: true },
           legend: { position: "top" },
+          tooltip: { enabled: true },
           datalabels: {
             color: "#000",
-            anchor: "end",
-            align: "start",
+            font: { weight: "bold" },
             formatter: function(value, context) {
               const index = context.dataIndex;
-              const dsIndex = context.datasetIndex;
+              const dsLabel = context.dataset.label;
+              const v2024 = data.datasets[0].data[index];
+              const v2025 = data.datasets[1].data[index];
+              const vProc = data.datasets[2].data[index];
 
-              // Mostrar percentual apenas no topo da pilha (último dataset da pilha "2025")
-              if (data.datasets[dsIndex].label === "2025 Procedente") {
-                const v2024 = data.datasets[0].data[index];
-                const v2025 = data.datasets[1].data[index];
-                const vProc = data.datasets[2].data[index];
+              if (dsLabel === "Procedente") {
+                return "Procedente";
+              }
+
+              if (dsLabel === "2025") {
                 const total2025 = v2025 + vProc;
                 if (v2024 > 0 && total2025 > 0) {
                   return `${Math.round((total2025 / v2024) * 100)}%`;
                 }
               }
+
               return value > 0 ? value : "";
-            }
+            },
+            anchor: "end",
+            align: "start"
           }
         },
         scales: {
-          x: { stacked: true },
+          x: {
+            stacked: true,
+            ticks: { font: { size: 12 } }
+          },
           y: {
             stacked: false,
             beginAtZero: true,
-            title: { display: true, text: "Valores" }
+            title: {
+              display: true,
+              text: "Valores",
+              font: { size: 14 }
+            }
           }
         }
       },
