@@ -1,138 +1,125 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gráfico Interativo</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        .container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .input-group {
-            margin: 10px;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        canvas {
-            max-width: 100%;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gráfico Empilhado 2024 vs 2025</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      width: 150px;
+    }
+    canvas {
+      max-width: 100%;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Gráfico Interativo de 2024 vs 2025</h1>
+<h2>Gráfico Empilhado: 2024 vs 2025 (Procedente)</h2>
 
 <div class="container">
-    <div class="input-group">
-        <label for="valor2024">2024:</label>
-        <input type="number" id="valor2024" value="33" onchange="atualizarGrafico()">
-    </div>
-    <div class="input-group">
-        <label for="valor2025">2025:</label>
-        <input type="number" id="valor2025" value="12" onchange="atualizarGrafico()">
-    </div>
-    <div class="input-group">
-        <label for="valorProcedente">2025 Procedente:</label>
-        <input type="number" id="valorProcedente" value="4" onchange="atualizarGrafico()">
-    </div>
+  <div class="input-group">
+    <label for="valor2024">Valor 2024 (Jan):</label>
+    <input type="number" id="valor2024" value="33" onchange="atualizarGrafico()">
+  </div>
+  <div class="input-group">
+    <label for="valor2025">Valor 2025 (Jan):</label>
+    <input type="number" id="valor2025" value="12" onchange="atualizarGrafico()">
+  </div>
+  <div class="input-group">
+    <label for="valorProcedente">2025 Procedente (Jan):</label>
+    <input type="number" id="valorProcedente" value="4" onchange="atualizarGrafico()">
+  </div>
 </div>
 
 <canvas id="grafico"></canvas>
 
 <script>
-    // Dados iniciais
-    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    let dados2024 = [33, 34, 35, 33, 22, 32, 37, 28, 29, 22, 14, 14];
-    let dados2025 = [12, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let procedente2025 = [4, 8, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let percentual = [48, 65, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
-    // Configuração do gráfico
-    const ctx = document.getElementById('grafico').getContext('2d');
-    const grafico = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: meses,
-            datasets: [{
-                label: '2024',
-                data: dados2024,
-                backgroundColor: 'skyblue',
-                borderColor: 'skyblue',
-                borderWidth: 1
-            }, {
-                label: '2025',
-                data: dados2025,
-                backgroundColor: 'orange',
-                borderColor: 'orange',
-                borderWidth: 1
-            }, {
-                label: '2025 Procedente',
-                data: procedente2025,
-                backgroundColor: 'green',
-                borderColor: 'green',
-                borderWidth: 1,
-                // Barra de "2025 Procedente" será exibida sobre a de 2025
-                order: 1
-            }]
+  // Valores iniciais
+  let dados2024 = [33, 34, 35, 33, 22, 32, 37, 28, 29, 22, 14, 14];
+  let dados2025 = [12, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let procedente2025 = [4, 8, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  const ctx = document.getElementById('grafico').getContext('2d');
+
+  const grafico = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: meses,
+      datasets: [
+        {
+          label: '2024',
+          data: dados2024,
+          backgroundColor: 'skyblue',
+          stack: '2024'
         },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    beginAtZero: true
-                },
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            const total = dados2025[tooltipItem.dataIndex] + procedente2025[tooltipItem.dataIndex];
-                            const percentage = total / dados2024[tooltipItem.dataIndex] * 100;
-                            return `${tooltipItem.dataset.label}: ${tooltipItem.raw} ( ${percentage.toFixed(2)}% )`;
-                        }
-                    }
-                }
-            }
+        {
+          label: '2025',
+          data: dados2025,
+          backgroundColor: 'orange',
+          stack: '2025'
+        },
+        {
+          label: '2025 Procedente',
+          data: procedente2025,
+          backgroundColor: 'green',
+          stack: '2025'
         }
-    });
-
-    // Função para atualizar o gráfico com os valores digitados
-    function atualizarGrafico() {
-        // Obter os valores dos inputs
-        const valor2024 = document.getElementById('valor2024').value;
-        const valor2025 = document.getElementById('valor2025').value;
-        const valorProcedente = document.getElementById('valorProcedente').value;
-
-        // Atualizar os dados
-        dados2024 = Array(12).fill(parseInt(valor2024));
-        dados2025 = Array(12).fill(parseInt(valor2025));
-        procedente2025 = Array(12).fill(parseInt(valorProcedente));
-
-        // Atualizar os percentuais
-        percentual = dados2025.map((value, index) => {
-            const total = value + procedente2025[index];
-            return ((total / dados2024[index]) * 100).toFixed(2);
-        });
-
-        // Atualizar o gráfico
-        grafico.data.datasets[0].data = dados2024;
-        grafico.data.datasets[1].data = dados2025;
-        grafico.data.datasets[2].data = procedente2025;
-        grafico.update();
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const label = ctx.dataset.label || '';
+              return `${label}: ${ctx.raw}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: {
+          beginAtZero: true,
+          stacked: true
+        }
+      }
     }
+  });
+
+  function atualizarGrafico() {
+    const valor2024 = parseInt(document.getElementById('valor2024').value) || 0;
+    const valor2025 = parseInt(document.getElementById('valor2025').value) || 0;
+    const valorProcedente = parseInt(document.getElementById('valorProcedente').value) || 0;
+
+    // Atualiza só o mês de janeiro como exemplo
+    dados2024[0] = valor2024;
+    dados2025[0] = valor2025;
+    procedente2025[0] = valorProcedente;
+
+    grafico.data.datasets[0].data = dados2024;
+    grafico.data.datasets[1].data = dados2025;
+    grafico.data.datasets[2].data = procedente2025;
+
+    grafico.update();
+  }
 </script>
 
 </body>
