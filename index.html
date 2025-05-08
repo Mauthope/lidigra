@@ -73,18 +73,19 @@
         {
           label: "2024",
           backgroundColor: "#4fa3e3",
-          data: dadosIniciais["2024"]
+          data: [...dadosIniciais["2024"]],
+          stack: "2024"
         },
         {
           label: "2025",
           backgroundColor: "#f7a541",
-          data: dadosIniciais["2025"],
+          data: [...dadosIniciais["2025"]],
           stack: "2025"
         },
         {
           label: "2025 Procedente",
           backgroundColor: "#4CAF50", // verde
-          data: dadosIniciais["2025 Procedente"],
+          data: [...dadosIniciais["2025 Procedente"]],
           stack: "2025"
         }
       ]
@@ -104,20 +105,20 @@
             anchor: "end",
             align: "start",
             formatter: function(value, context) {
-              const datasetIndex = context.datasetIndex;
-              const dataIndex = context.dataIndex;
-              if (datasetIndex === 2) { // Apenas no topo do agrupamento
-                const v2024 = data.datasets[0].data[dataIndex];
-                const v2025 = data.datasets[1].data[dataIndex];
-                const vProc = data.datasets[2].data[dataIndex];
+              const index = context.dataIndex;
+              const dsIndex = context.datasetIndex;
+
+              // Mostrar percentual apenas no topo da pilha (último dataset da pilha "2025")
+              if (data.datasets[dsIndex].label === "2025 Procedente") {
+                const v2024 = data.datasets[0].data[index];
+                const v2025 = data.datasets[1].data[index];
+                const vProc = data.datasets[2].data[index];
                 const total2025 = v2025 + vProc;
                 if (v2024 > 0 && total2025 > 0) {
                   return `${Math.round((total2025 / v2024) * 100)}%`;
                 }
-              } else {
-                return value;
               }
-              return "";
+              return value > 0 ? value : "";
             }
           }
         },
