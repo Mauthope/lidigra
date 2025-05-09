@@ -1,171 +1,196 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gráfico Empilhado com Percentuais</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <meta charset="UTF-8">
+  <title>Instruções Passo a Passo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
+      background: #f7f7f7;
     }
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 20px;
+    h1, h2 {
+      color: #333;
     }
-    .input-group {
-      width: 200px;
+    input, textarea, button, select {
+      width: 100%;
+      margin: 5px 0 15px;
+      padding: 10px;
+      font-size: 1em;
     }
-    canvas {
+    .passo {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .passo img {
       max-width: 100%;
+      height: auto;
+      display: block;
+      margin-top: 10px;
+    }
+    .botoes {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .instrucoes-salvas {
+      margin-top: 30px;
+    }
+    .btn {
+      background: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #2980b9;
+    }
+    .btn-danger {
+      background: #e74c3c;
+    }
+    .btn-danger:hover {
+      background: #c0392b;
     }
   </style>
 </head>
 <body>
+  <h1>Criação de Instruções</h1>
+  <input type="text" id="titulo" placeholder="Título da instrução">
+  <textarea id="descricao" placeholder="Descrição geral da instrução"></textarea>
 
-<h2>Gráfico Empilhado: 2024 vs 2025 (Procedente)</h2>
+  <div id="passos-container"></div>
 
-<div class="container">
-  <div class="input-group">
-    <label for="valor2024">Valor 2024 (Jan):</label>
-    <input type="number" id="valor2024" value="33" onchange="atualizarGrafico()">
+  <button class="btn" onclick="adicionarPasso()">Adicionar Passo</button>
+  <button class="btn" onclick="salvarInstrucao()">Salvar Instrução</button>
+  <button class="btn" onclick="exportarPDF()">Exportar em PDF</button>
+
+  <div class="instrucoes-salvas">
+    <h2>Instruções Salvas</h2>
+    <select id="listaInstrucoes" onchange="carregarInstrucao(this.value)">
+      <option value="">Selecione uma instrução</option>
+    </select>
   </div>
-  <div class="input-group">
-    <label for="valor2025">Valor 2025 (Jan):</label>
-    <input type="number" id="valor2025" value="12" onchange="atualizarGrafico()">
-  </div>
-  <div class="input-group">
-    <label for="valorProcedente">2025 Procedente (Jan):</label>
-    <input type="number" id="valorProcedente" value="4" onchange="atualizarGrafico()">
-  </div>
-</div>
 
-<canvas id="grafico"></canvas>
+  <!-- Biblioteca html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<script>
-  const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  <script>
+    let passos = [];
 
-  let dados2024 = [33, 34, 35, 33, 22, 32, 37, 28, 29, 22, 14, 14];
-  let dados2025 = [12, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let procedente2025 = [4, 8, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    function adicionarPasso() {
+      const passoIndex = passos.length + 1;
+      const div = document.createElement("div");
+      div.className = "passo";
+      div.innerHTML = `
+        <strong>Passo ${passoIndex}</strong>
+        <textarea placeholder="Descrição do passo"></textarea>
+        <input type="file" accept="image/*" onchange="carregarImagem(this)">
+        <img style="display:none">
+        <button class="btn btn-danger" onclick="removerPasso(this)">Remover Passo</button>
+      `;
+      document.getElementById("passos-container").appendChild(div);
+      passos.push(div);
+    }
 
-  const ctx = document.getElementById('grafico').getContext('2d');
+    function removerPasso(botao) {
+      const div = botao.parentElement;
+      div.remove();
+      passos = Array.from(document.querySelectorAll('.passo'));
+      passos.forEach((p, i) => {
+        p.querySelector('strong').textContent = `Passo ${i + 1}`;
+      });
+    }
 
-  const grafico = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: meses,
-      datasets: [
-        {
-          label: '2024',
-          data: dados2024,
-          backgroundColor: 'skyblue',
-          stack: '2024',
-          datalabels: {
-            color: 'white',
-            anchor: 'end',
-            align: 'start',
-            formatter: Math.round
-          }
-        },
-        {
-          label: '2025',
-          data: dados2025,
-          backgroundColor: 'orange',
-          stack: '2025',
-          datalabels: {
-            color: 'white',
-            anchor: 'center',
-            align: 'center',
-            formatter: Math.round
-          }
-        },
-        {
-          label: '2025 Procedente',
-          data: procedente2025,
-          backgroundColor: 'green',
-          stack: '2025',
-          datalabels: {
-            color: 'white',
-            anchor: 'center',
-            align: 'center',
-            formatter: Math.round
-          }
-        },
-        {
-          label: '% sobre 2024',
-          data: calcularPercentuais(dados2024, dados2025, procedente2025),
-          type: 'bar',
-          backgroundColor: 'transparent',
-          stack: 'invisível',
-          datalabels: {
-            color: 'black',
-            anchor: 'end',
-            align: 'end',
-            formatter: function(value) {
-              return value > 0 ? value + '%' : '';
-            },
-            display: true
-          }
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        datalabels: {
-          display: true
-        },
-        tooltip: {
-          callbacks: {
-            label: function(ctx) {
-              return `${ctx.dataset.label}: ${ctx.raw}`;
-            }
-          }
-        },
-        legend: {
-          position: 'top'
-        }
-      },
-      scales: {
-        x: { stacked: true },
-        y: {
-          beginAtZero: true,
-          stacked: true
-        }
+    function carregarImagem(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = input.nextElementSibling;
+          img.src = e.target.result;
+          img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
       }
-    },
-    plugins: [ChartDataLabels]
-  });
+    }
 
-  function calcularPercentuais(base, parte1, parte2) {
-    return base.map((val, i) => {
-      const total = parte1[i] + parte2[i];
-      return val > 0 ? Math.round((total / val) * 100) : 0;
-    });
-  }
+    function salvarInstrucao() {
+      const titulo = document.getElementById("titulo").value.trim();
+      if (!titulo) {
+        alert("Informe um título para a instrução.");
+        return;
+      }
+      const descricao = document.getElementById("descricao").value;
+      const dados = {
+        titulo,
+        descricao,
+        passos: []
+      };
+      document.querySelectorAll(".passo").forEach(p => {
+        dados.passos.push({
+          descricao: p.querySelector("textarea").value,
+          imagem: p.querySelector("img").src || ""
+        });
+      });
+      localStorage.setItem("instrucao_" + titulo, JSON.stringify(dados));
+      carregarListaInstrucoes();
+      alert("Instrução salva com sucesso.");
+    }
 
-  function atualizarGrafico() {
-    const valor2024 = parseInt(document.getElementById('valor2024').value) || 0;
-    const valor2025 = parseInt(document.getElementById('valor2025').value) || 0;
-    const valorProcedente = parseInt(document.getElementById('valorProcedente').value) || 0;
+    function carregarListaInstrucoes() {
+      const select = document.getElementById("listaInstrucoes");
+      select.innerHTML = '<option value="">Selecione uma instrução</option>';
+      Object.keys(localStorage).filter(k => k.startsWith("instrucao_")).forEach(k => {
+        const titulo = k.replace("instrucao_", "");
+        const opt = document.createElement("option");
+        opt.value = k;
+        opt.textContent = titulo;
+        select.appendChild(opt);
+      });
+    }
 
-    dados2024[0] = valor2024;
-    dados2025[0] = valor2025;
-    procedente2025[0] = valorProcedente;
+    function carregarInstrucao(chave) {
+      if (!chave) return;
+      const dados = JSON.parse(localStorage.getItem(chave));
+      document.getElementById("titulo").value = dados.titulo;
+      document.getElementById("descricao").value = dados.descricao;
+      document.getElementById("passos-container").innerHTML = '';
+      passos = [];
+      dados.passos.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "passo";
+        div.innerHTML = `
+          <strong>Passo ${passos.length + 1}</strong>
+          <textarea>${p.descricao}</textarea>
+          <input type="file" accept="image/*" onchange="carregarImagem(this)">
+          <img src="${p.imagem}" style="${p.imagem ? 'display:block' : 'display:none'}">
+          <button class="btn btn-danger" onclick="removerPasso(this)">Remover Passo</button>
+        `;
+        document.getElementById("passos-container").appendChild(div);
+        passos.push(div);
+      });
+    }
 
-    grafico.data.datasets[0].data = dados2024;
-    grafico.data.datasets[1].data = dados2025;
-    grafico.data.datasets[2].data = procedente2025;
-    grafico.data.datasets[3].data = calcularPercentuais(dados2024, dados2025, procedente2025);
+    function exportarPDF() {
+      const titulo = document.getElementById("titulo").value || "Instrução";
+      const area = document.createElement("div");
+      area.innerHTML = `<h1>${titulo}</h1><p>${document.getElementById("descricao").value}</p>`;
+      passos.forEach((p, i) => {
+        const img = p.querySelector("img");
+        area.innerHTML += `
+          <h3>Passo ${i + 1}</h3>
+          <p>${p.querySelector("textarea").value}</p>
+          ${img.src ? `<img src="${img.src}" style="max-width:100%; margin-bottom:15px;">` : ""}
+        `;
+      });
 
-    grafico.update();
-  }
-</script>
+      html2pdf().from(area).save(`${titulo}.pdf`);
+    }
 
+    carregarListaInstrucoes();
+  </script>
 </body>
 </html>
