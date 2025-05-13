@@ -45,7 +45,6 @@
       margin-top: 15px;
       width: 100%;
       padding: 10px;
-      background-color: #28a745;
       border: none;
       color: white;
       font-size: 16px;
@@ -53,8 +52,20 @@
       cursor: pointer;
     }
 
-    button:hover {
+    .btn-calcular {
+      background-color: #28a745;
+    }
+
+    .btn-calcular:hover {
       background-color: #218838;
+    }
+
+    .btn-limpar {
+      background-color: #dc3545;
+    }
+
+    .btn-limpar:hover {
+      background-color: #c82333;
     }
 
     .resultado {
@@ -84,7 +95,8 @@
       <label for="tubular">Tubular</label>
     </div>
 
-    <button onclick="calcular()">Calcular</button>
+    <button class="btn-calcular" onclick="calcular()">Calcular</button>
+    <button class="btn-limpar" onclick="limpar()">Limpar</button>
 
     <div class="resultado" id="resultado"></div>
   </div>
@@ -101,7 +113,6 @@
         return;
       }
 
-      // Se tubular, largura é multiplicada por 2 antes de dividir por 100
       const largura = (larguraInput * (tubular ? 2 : 1)) / 100;
       const gramatura = gramaturaInput / 1000;
 
@@ -109,6 +120,14 @@
       const resultadoFinal = 1000 / resultadoIntermediario;
 
       document.getElementById("resultado").innerText = `Resultado final: ${resultadoFinal.toFixed(2)}`;
+    }
+
+    function limpar() {
+      document.getElementById("largura").value = '';
+      document.getElementById("gramatura").value = '';
+      document.getElementById("velocidade").value = '';
+      document.getElementById("tubular").checked = false;
+      document.getElementById("resultado").innerText = '';
     }
   </script>
 </body>
