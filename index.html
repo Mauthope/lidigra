@@ -81,14 +81,17 @@
 
   <script>
     function calcular() {
-      const largura = parseFloat(document.getElementById("largura").value);
-      const gramatura = parseFloat(document.getElementById("gramatura").value);
+      const larguraInput = parseFloat(document.getElementById("largura").value);
+      const gramaturaInput = parseFloat(document.getElementById("gramatura").value);
       const velocidade = parseFloat(document.getElementById("velocidade").value);
 
-      if (isNaN(largura) || isNaN(gramatura) || isNaN(velocidade) || largura <= 0 || gramatura <= 0 || velocidade <= 0) {
+      if (isNaN(larguraInput) || isNaN(gramaturaInput) || isNaN(velocidade) || larguraInput <= 0 || gramaturaInput <= 0 || velocidade <= 0) {
         document.getElementById("resultado").innerText = "Por favor, preencha todos os campos com valores válidos.";
         return;
       }
+
+      const largura = larguraInput / 100;
+      const gramatura = gramaturaInput / 100;
 
       const resultadoIntermediario = largura * gramatura * velocidade * 60;
       const resultadoFinal = 1000 / resultadoIntermediario;
