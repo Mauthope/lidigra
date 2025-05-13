@@ -103,7 +103,7 @@
 
       // Se tubular, largura é multiplicada por 2 antes de dividir por 100
       const largura = (larguraInput * (tubular ? 2 : 1)) / 100;
-      const gramatura = gramaturaInput / 100;
+      const gramatura = gramaturaInput / 1000;
 
       const resultadoIntermediario = largura * gramatura * velocidade * 60;
       const resultadoFinal = 1000 / resultadoIntermediario;
