@@ -1,1 +1,100 @@
-fsfdsfsdfs
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .resultado {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Calculadora de Produção</h2>
+    <label for="largura">Largura (mm):</label>
+    <input type="number" id="largura" placeholder="Digite a largura">
+
+    <label for="gramatura">Gramatura (g/m²):</label>
+    <input type="number" id="gramatura" placeholder="Digite a gramatura">
+
+    <label for="velocidade">Velocidade (m/min):</label>
+    <input type="number" id="velocidade" placeholder="Digite a velocidade">
+
+    <button onclick="calcular()">Calcular</button>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    function calcular() {
+      const largura = parseFloat(document.getElementById("largura").value);
+      const gramatura = parseFloat(document.getElementById("gramatura").value);
+      const velocidade = parseFloat(document.getElementById("velocidade").value);
+
+      if (isNaN(largura) || isNaN(gramatura) || isNaN(velocidade) || largura <= 0 || gramatura <= 0 || velocidade <= 0) {
+        document.getElementById("resultado").innerText = "Por favor, preencha todos os campos com valores válidos.";
+        return;
+      }
+
+      const resultadoIntermediario = largura * gramatura * velocidade * 60;
+      const resultadoFinal = 1000 / resultadoIntermediario;
+
+      document.getElementById("resultado").innerText = `Resultado final: ${resultadoFinal.toFixed(6)}`;
+    }
+  </script>
+</body>
+</html>
