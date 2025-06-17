@@ -103,7 +103,7 @@
   <h2>Calculadoras</h2>
   <div class="nav-buttons">
     <button onclick="mostrarCalculadora('calcProducao')">Produção</button>
-    <button onclick="mostrarCalculadora('calcNova')">Nova Calculadora</button>
+    <button onclick="mostrarCalculadora('calcNova')">Tarja</button>
   </div>
 
   <!-- Calculadora de Produção -->
@@ -129,10 +129,30 @@
     <div class="resultado" id="resultado"></div>
   </div>
 
-  <!-- Nova Calculadora -->
+  <!-- Calculadora de Tarja -->
   <div class="container" id="calcNova">
-    <h3>Nova Calculadora</h3>
-    <p>Em breve...</p>
+    <h3>Calculadora de Tarja</h3>
+
+    <label for="compTarja">Comprimento da Tarja (cm):</label>
+    <input type="number" id="compTarja" placeholder="Digite o comprimento">
+
+    <label for="largTarja">Largura da Tarja (cm):</label>
+    <input type="number" id="largTarja" placeholder="Digite a largura">
+
+    <div class="checkbox-label">
+      <input type="checkbox" id="soldadoCosturado" onchange="alternarCheckbox(this)">
+      <label for="soldadoCosturado">Soldado/Costurado</label>
+    </div>
+
+    <div class="checkbox-label">
+      <input type="checkbox" id="costuradoSoldado" onchange="alternarCheckbox(this)">
+      <label for="costuradoSoldado">Costurado/Soldado</label>
+    </div>
+
+    <button class="btn-calcular" onclick="calcularTarja()">Calcular</button>
+    <button class="btn-limpar" onclick="limparTarja()">Limpar</button>
+
+    <div class="resultado" id="resultadoTarja"></div>
   </div>
 
   <script>
@@ -168,6 +188,42 @@
       document.getElementById("velocidade").value = '';
       document.getElementById("tubular").checked = false;
       document.getElementById("resultado").innerText = '';
+    }
+
+    function alternarCheckbox(marcado) {
+      const outros = ["soldadoCosturado", "costuradoSoldado"].filter(id => id !== marcado.id);
+      outros.forEach(id => document.getElementById(id).checked = false);
+    }
+
+    function calcularTarja() {
+      const largura = parseFloat(document.getElementById("largTarja").value);
+      const soldadoCosturado = document.getElementById("soldadoCosturado").checked;
+      const costuradoSoldado = document.getElementById("costuradoSoldado").checked;
+
+      if (isNaN(largura) || largura <= 0) {
+        document.getElementById("resultadoTarja").innerText = "Insira uma largura válida.";
+        return;
+      }
+
+      let resultado;
+      if (soldadoCosturado) {
+        resultado = largura + 2;
+      } else if (costuradoSoldado) {
+        resultado = largura - 2;
+      } else {
+        document.getElementById("resultadoTarja").innerText = "Selecione uma das opções.";
+        return;
+      }
+
+      document.getElementById("resultadoTarja").innerText = `Resultado: ${resultado.toFixed(2)} cm`;
+    }
+
+    function limparTarja() {
+      document.getElementById("compTarja").value = '';
+      document.getElementById("largTarja").value = '';
+      document.getElementById("soldadoCosturado").checked = false;
+      document.getElementById("costuradoSoldado").checked = false;
+      document.getElementById("resultadoTarja").innerText = '';
     }
   </script>
 </body>
