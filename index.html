@@ -217,8 +217,8 @@
         return;
       }
       let r = 0;
-      if (sC) r = l + 2 + c;
-      else if (cS) r = l - 2 + c;
+      if (sC) r = c + l + 2;
+      else if (cS) r = c - l - 2;
       else {
         document.getElementById("resultadoTarja").innerText = "Selecione uma das opções.";
         return;
