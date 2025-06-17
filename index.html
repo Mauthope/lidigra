@@ -10,17 +10,14 @@
       padding: 20px;
       background: #f4f4f4;
     }
-
     h2 {
       color: #333;
       text-align: center;
     }
-
     .nav-buttons {
       text-align: center;
       margin-bottom: 20px;
     }
-
     .nav-buttons button {
       margin: 5px;
       padding: 10px 20px;
@@ -30,11 +27,9 @@
       color: white;
       cursor: pointer;
     }
-
     .nav-buttons button:hover {
       background-color: #0056b3;
     }
-
     .container {
       display: none;
       max-width: 400px;
@@ -44,29 +39,24 @@
       border-radius: 10px;
       box-shadow: 0 0 10px #ccc;
     }
-
     .active {
       display: block;
     }
-
     label {
       display: block;
       margin-top: 10px;
     }
-
     input[type="number"],
     input[type="checkbox"] {
       margin-top: 5px;
     }
-
     .checkbox-label {
       margin-top: 15px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
-    button.btn-calcular {
+    .btn-calcular, .btn-limpar {
       margin-top: 15px;
       width: 100%;
       padding: 10px;
@@ -74,22 +64,20 @@
       color: white;
       font-size: 16px;
       border-radius: 5px;
-      background-color: #28a745;
       cursor: pointer;
     }
-
-    button.btn-calcular:hover {
+    .btn-calcular {
+      background-color: #28a745;
+    }
+    .btn-calcular:hover {
       background-color: #218838;
     }
-
-    button.btn-limpar {
+    .btn-limpar {
       background-color: #dc3545;
     }
-
-    button.btn-limpar:hover {
+    .btn-limpar:hover {
       background-color: #c82333;
     }
-
     .resultado {
       margin-top: 20px;
       font-size: 18px;
@@ -103,36 +91,37 @@
   <h2>Calculadoras</h2>
   <div class="nav-buttons">
     <button onclick="mostrarCalculadora('calcProducao')">Produção Lam/TOTvs</button>
-    <button onclick="mostrarCalculadora('calcNova')">Conv. Sold/Costu</button>
+    <button onclick="mostrarCalculadora('calcTarja')">Conv. Sold/Costu</button>
     <button onclick="mostrarCalculadora('calcManga')">Manga Dobrável</button>
     <button onclick="mostrarCalculadora('calcValvula')">Altura da Válvula</button>
+    <button onclick="mostrarCalculadora('calcSanfona')">Sanfona</button>
   </div>
 
-  <!-- Calculadora de Produção -->
+  <!-- CALCULADORA DE PRODUÇÃO -->
   <div class="container active" id="calcProducao">
-    <h3>Calculadora de Produção</h3>
+    <h3>Produção</h3>
     <label for="largura">Largura (cm):</label>
-    <input type="number" id="largura" placeholder="Digite a largura">
+    <input type="number" id="largura">
     <label for="gramatura">Gramatura (g/m²):</label>
-    <input type="number" id="gramatura" placeholder="Digite a gramatura">
+    <input type="number" id="gramatura">
     <label for="velocidade">Velocidade (m/min):</label>
-    <input type="number" id="velocidade" placeholder="Digite a velocidade">
+    <input type="number" id="velocidade">
     <div class="checkbox-label">
       <input type="checkbox" id="tubular">
       <label for="tubular">Tubular</label>
     </div>
-    <button class="btn-calcular" onclick="calcular()">Calcular</button>
-    <button class="btn-limpar" onclick="limpar()">Limpar</button>
-    <div class="resultado" id="resultado"></div>
+    <button class="btn-calcular" onclick="calcularProducao()">Calcular</button>
+    <button class="btn-limpar" onclick="limparProducao()">Limpar</button>
+    <div class="resultado" id="resultadoProducao"></div>
   </div>
 
-  <!-- Calculadora Tarja -->
-  <div class="container" id="calcNova">
-    <h3>Calculadora de Tarja</h3>
+  <!-- TARJA -->
+  <div class="container" id="calcTarja">
+    <h3>Tarja</h3>
     <label for="compTarja">Comprimento (cm):</label>
-    <input type="number" id="compTarja" placeholder="Digite o comprimento">
+    <input type="number" id="compTarja">
     <label for="largTarja">Largura da Tarja (cm):</label>
-    <input type="number" id="largTarja" placeholder="Digite a largura">
+    <input type="number" id="largTarja">
     <div class="checkbox-label">
       <input type="checkbox" id="soldadoCosturado" onchange="alternarCheckbox(this)">
       <label for="soldadoCosturado">Soldado/Costurado</label>
@@ -146,112 +135,113 @@
     <div class="resultado" id="resultadoTarja"></div>
   </div>
 
-  <!-- Calculadora Manga Dobrável -->
+  <!-- MANGA DOBRÁVEL -->
   <div class="container" id="calcManga">
     <h3>Manga Dobrável</h3>
     <label for="larguraManga">Largura (cm):</label>
-    <input type="number" id="larguraManga" placeholder="Digite a largura">
+    <input type="number" id="larguraManga">
     <button class="btn-calcular" onclick="calcularManga()">Calcular</button>
     <button class="btn-limpar" onclick="limparManga()">Limpar</button>
     <div class="resultado" id="resultadoManga"></div>
   </div>
 
-  <!-- Calculadora Altura da Válvula -->
+  <!-- ALTURA DA VÁLVULA -->
   <div class="container" id="calcValvula">
     <h3>Altura da Válvula</h3>
     <div class="checkbox-label">
-      <input type="checkbox" id="checkPerimetro" onchange="alternarOpcaoValvula(this)">
-      <label for="checkPerimetro">Perímetro</label>
+      <input type="checkbox" id="perimetro" onchange="alternarCheckbox(this)">
+      <label for="perimetro">Perímetro</label>
     </div>
     <div class="checkbox-label">
-      <input type="checkbox" id="checkDiametro" onchange="alternarOpcaoValvula(this)">
-      <label for="checkDiametro">Diâmetro</label>
+      <input type="checkbox" id="diametro" onchange="alternarCheckbox(this)">
+      <label for="diametro">Diâmetro</label>
     </div>
-    <label for="valorValvula">Valor:</label>
-    <input type="number" id="valorValvula" placeholder="Digite o valor">
+    <label for="valorValvula">Valor (cm):</label>
+    <input type="number" id="valorValvula">
     <button class="btn-calcular" onclick="calcularValvula()">Calcular</button>
     <button class="btn-limpar" onclick="limparValvula()">Limpar</button>
     <div class="resultado" id="resultadoValvula"></div>
   </div>
 
+  <!-- SANFONA -->
+  <div class="container" id="calcSanfona">
+    <h3>Sanfona</h3>
+    <label for="larguraSanfona">Largura (cm):</label>
+    <input type="number" id="larguraSanfona">
+    <button class="btn-calcular" onclick="calcularSanfona()">Calcular</button>
+    <button class="btn-limpar" onclick="limparSanfona()">Limpar</button>
+    <div class="resultado" id="resultadoSanfona"></div>
+  </div>
+
   <script>
     function mostrarCalculadora(id) {
-      const containers = document.querySelectorAll('.container');
-      containers.forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    function calcular() {
-      const larguraInput = parseFloat(document.getElementById("largura").value);
-      const gramaturaInput = parseFloat(document.getElementById("gramatura").value);
-      const velocidade = parseFloat(document.getElementById("velocidade").value);
-      const tubular = document.getElementById("tubular").checked;
+    function alternarCheckbox(marcado) {
+      const ids = ["soldadoCosturado", "costuradoSoldado", "perimetro", "diametro"];
+      ids.forEach(id => {
+        if (id !== marcado.id) document.getElementById(id).checked = false;
+      });
+    }
 
-      if (isNaN(larguraInput) || isNaN(gramaturaInput) || isNaN(velocidade) || larguraInput <= 0 || gramaturaInput <= 0 || velocidade <= 0) {
-        document.getElementById("resultado").innerText = "Preencha todos os campos corretamente.";
+    function calcularProducao() {
+      const l = parseFloat(document.getElementById("largura").value);
+      const g = parseFloat(document.getElementById("gramatura").value);
+      const v = parseFloat(document.getElementById("velocidade").value);
+      const t = document.getElementById("tubular").checked;
+      if (isNaN(l) || isNaN(g) || isNaN(v) || l <= 0 || g <= 0 || v <= 0) {
+        document.getElementById("resultadoProducao").innerText = "Preencha todos os campos corretamente.";
         return;
       }
-
-      const largura = (larguraInput * (tubular ? 2 : 1)) / 100;
-      const gramatura = gramaturaInput / 1000;
-      const resultadoFinal = 1000 / (largura * gramatura * velocidade * 60);
-
-      document.getElementById("resultado").innerText = `Resultado final: ${resultadoFinal.toFixed(2)}`;
+      const largura = (l * (t ? 2 : 1)) / 100;
+      const gramatura = g / 1000;
+      const res = 1000 / (largura * gramatura * v * 60);
+      document.getElementById("resultadoProducao").innerText = `Resultado final: ${res.toFixed(2)}`;
     }
 
-    function limpar() {
-      document.getElementById("largura").value = '';
-      document.getElementById("gramatura").value = '';
-      document.getElementById("velocidade").value = '';
+    function limparProducao() {
+      ["largura", "gramatura", "velocidade"].forEach(id => document.getElementById(id).value = '');
       document.getElementById("tubular").checked = false;
-      document.getElementById("resultado").innerText = '';
-    }
-
-    function alternarCheckbox(marcado) {
-      const outros = ["soldadoCosturado", "costuradoSoldado"].filter(id => id !== marcado.id);
-      outros.forEach(id => document.getElementById(id).checked = false);
+      document.getElementById("resultadoProducao").innerText = '';
     }
 
     function calcularTarja() {
-      const largura = parseFloat(document.getElementById("largTarja").value);
-      const comprimento = parseFloat(document.getElementById("compTarja").value);
-      const soldadoCosturado = document.getElementById("soldadoCosturado").checked;
-      const costuradoSoldado = document.getElementById("costuradoSoldado").checked;
-
-      if (isNaN(largura) || isNaN(comprimento) || largura <= 0 || comprimento <= 0) {
-        document.getElementById("resultadoTarja").innerText = "Insira valores válidos.";
+      const l = parseFloat(document.getElementById("largTarja").value);
+      const c = parseFloat(document.getElementById("compTarja").value);
+      const sC = document.getElementById("soldadoCosturado").checked;
+      const cS = document.getElementById("costuradoSoldado").checked;
+      if (isNaN(l) || isNaN(c)) {
+        document.getElementById("resultadoTarja").innerText = "Valores inválidos.";
         return;
       }
-
-      let resultado;
-      if (soldadoCosturado) {
-        resultado = largura + 2 + comprimento;
-      } else if (costuradoSoldado) {
-        resultado = largura - 2 + comprimento;
-      } else {
+      let r = 0;
+      if (sC) r = l + 2 + c;
+      else if (cS) r = l - 2 + c;
+      else {
         document.getElementById("resultadoTarja").innerText = "Selecione uma das opções.";
         return;
       }
-
-      document.getElementById("resultadoTarja").innerText = `Resultado: ${resultado.toFixed(2)} cm`;
+      document.getElementById("resultadoTarja").innerText = `Resultado: ${r.toFixed(2)} cm`;
     }
 
     function limparTarja() {
-      document.getElementById("compTarja").value = '';
       document.getElementById("largTarja").value = '';
+      document.getElementById("compTarja").value = '';
       document.getElementById("soldadoCosturado").checked = false;
       document.getElementById("costuradoSoldado").checked = false;
       document.getElementById("resultadoTarja").innerText = '';
     }
 
     function calcularManga() {
-      const largura = parseFloat(document.getElementById("larguraManga").value);
-      if (isNaN(largura) || largura <= 0) {
-        document.getElementById("resultadoManga").innerText = "Informe a largura corretamente.";
+      const l = parseFloat(document.getElementById("larguraManga").value);
+      if (isNaN(l)) {
+        document.getElementById("resultadoManga").innerText = "Digite um valor válido.";
         return;
       }
-      const resultado = ((largura + 3) * 3) / 2;
-      document.getElementById("resultadoManga").innerText = `Resultado: ${resultado.toFixed(2)} cm`;
+      const r = ((l + 3) * 3) / 2;
+      document.getElementById("resultadoManga").innerText = `Resultado: ${r.toFixed(2)} cm`;
     }
 
     function limparManga() {
@@ -259,39 +249,44 @@
       document.getElementById("resultadoManga").innerText = '';
     }
 
-    function alternarOpcaoValvula(marcado) {
-      const outros = ["checkPerimetro", "checkDiametro"].filter(id => id !== marcado.id);
-      outros.forEach(id => document.getElementById(id).checked = false);
-    }
-
     function calcularValvula() {
-      const valor = parseFloat(document.getElementById("valorValvula").value);
-      const perimetro = document.getElementById("checkPerimetro").checked;
-      const diametro = document.getElementById("checkDiametro").checked;
-
-      if (isNaN(valor) || valor <= 0) {
-        document.getElementById("resultadoValvula").innerText = "Informe o valor corretamente.";
+      const per = document.getElementById("perimetro").checked;
+      const dia = document.getElementById("diametro").checked;
+      const val = parseFloat(document.getElementById("valorValvula").value);
+      if (isNaN(val)) {
+        document.getElementById("resultadoValvula").innerText = "Informe um valor válido.";
         return;
       }
-
-      let resultado;
-      if (perimetro) {
-        resultado = (valor / 2) + 1;
-      } else if (diametro) {
-        resultado = ((valor * 3.1416) / 2) + 1;
-      } else {
-        document.getElementById("resultadoValvula").innerText = "Selecione uma opção.";
+      let r = 0;
+      if (per) r = val / 2 + 1;
+      else if (dia) r = (val * 3.1416) / 2 + 1;
+      else {
+        document.getElementById("resultadoValvula").innerText = "Selecione uma das opções.";
         return;
       }
-
-      document.getElementById("resultadoValvula").innerText = `Altura estimada: ${resultado.toFixed(2)} cm`;
+      document.getElementById("resultadoValvula").innerText = `Resultado: ${r.toFixed(2)} cm`;
     }
 
     function limparValvula() {
       document.getElementById("valorValvula").value = '';
-      document.getElementById("checkPerimetro").checked = false;
-      document.getElementById("checkDiametro").checked = false;
+      document.getElementById("perimetro").checked = false;
+      document.getElementById("diametro").checked = false;
       document.getElementById("resultadoValvula").innerText = '';
+    }
+
+    function calcularSanfona() {
+      const l = parseFloat(document.getElementById("larguraSanfona").value);
+      if (isNaN(l) || l <= 100) {
+        document.getElementById("resultadoSanfona").innerText = "Informe uma largura maior que 100 cm.";
+        return;
+      }
+      const r = (l - 100) / 2 - 1;
+      document.getElementById("resultadoSanfona").innerText = `Resultado: ${r.toFixed(2)} cm`;
+    }
+
+    function limparSanfona() {
+      document.getElementById("larguraSanfona").value = '';
+      document.getElementById("resultadoSanfona").innerText = '';
     }
   </script>
 </body>
