@@ -104,6 +104,7 @@
   <div class="nav-buttons">
     <button onclick="mostrarCalculadora('calcProducao')">Produção Lam/TOTvs</button>
     <button onclick="mostrarCalculadora('calcNova')">Conv.Sold/Costu</button>
+    <button onclick="mostrarCalculadora('calcManga')">Manga Dobrável</button>
   </div>
 
   <!-- Calculadora de Produção -->
@@ -153,6 +154,17 @@
     <button class="btn-limpar" onclick="limparTarja()">Limpar</button>
 
     <div class="resultado" id="resultadoTarja"></div>
+    <!-- Calculadora Manga Dobrável -->
+<div class="container" id="calcManga">
+  <h3>Calculadora de Manga Dobrável</h3>
+
+  <label for="largManga">Largura da Válvula (cm):</label>
+  <input type="number" id="largManga" placeholder="Digite a largura">
+
+  <button class="btn-calcular" onclick="calcularManga()">Calcular</button>
+  <button class="btn-limpar" onclick="limparManga()">Limpar</button>
+
+  <div class="resultado" id="resultadoManga"></div>
   </div>
 
   <script>
@@ -226,6 +238,22 @@
       document.getElementById("costuradoSoldado").checked = false;
       document.getElementById("resultadoTarja").innerText = '';
     }
+    function calcularManga() {
+    const largura = parseFloat(document.getElementById("largManga").value);
+
+    if (isNaN(largura) || largura <= 0) {
+      document.getElementById("resultadoManga").innerText = "Insira uma largura válida.";
+      return;
+    }
+
+    const resultado = ((largura + 3) * 3) / 2;
+    document.getElementById("resultadoManga").innerText = `Resultado: ${resultado.toFixed(2)} cm`;
+  }
+
+  function limparManga() {
+    document.getElementById("largManga").value = '';
+    document.getElementById("resultadoManga").innerText = '';
+  }
   </script>
 </body>
 </html>
