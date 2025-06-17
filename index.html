@@ -101,11 +101,11 @@
 </head>
 <body>
   <h2>Calculadoras</h2>
-
   <div class="nav-buttons">
     <button onclick="mostrarCalculadora('calcProducao')">Produção Lam/TOTvs</button>
     <button onclick="mostrarCalculadora('calcNova')">Conv. Sold/Costu</button>
     <button onclick="mostrarCalculadora('calcManga')">Manga Dobrável</button>
+    <button onclick="mostrarCalculadora('calcValvula')">Altura da Válvula</button>
   </div>
 
   <!-- Calculadora de Produção -->
@@ -113,61 +113,65 @@
     <h3>Calculadora de Produção</h3>
     <label for="largura">Largura (cm):</label>
     <input type="number" id="largura" placeholder="Digite a largura">
-
     <label for="gramatura">Gramatura (g/m²):</label>
     <input type="number" id="gramatura" placeholder="Digite a gramatura">
-
     <label for="velocidade">Velocidade (m/min):</label>
     <input type="number" id="velocidade" placeholder="Digite a velocidade">
-
     <div class="checkbox-label">
       <input type="checkbox" id="tubular">
       <label for="tubular">Tubular</label>
     </div>
-
     <button class="btn-calcular" onclick="calcular()">Calcular</button>
     <button class="btn-limpar" onclick="limpar()">Limpar</button>
-
     <div class="resultado" id="resultado"></div>
   </div>
 
-  <!-- Conversão de Soldado/Costurado -->
+  <!-- Calculadora Tarja -->
   <div class="container" id="calcNova">
     <h3>Calculadora de Tarja</h3>
-
     <label for="compTarja">Comprimento (cm):</label>
     <input type="number" id="compTarja" placeholder="Digite o comprimento">
-
     <label for="largTarja">Largura da Tarja (cm):</label>
     <input type="number" id="largTarja" placeholder="Digite a largura">
-
     <div class="checkbox-label">
       <input type="checkbox" id="soldadoCosturado" onchange="alternarCheckbox(this)">
       <label for="soldadoCosturado">Soldado/Costurado</label>
     </div>
-
     <div class="checkbox-label">
       <input type="checkbox" id="costuradoSoldado" onchange="alternarCheckbox(this)">
       <label for="costuradoSoldado">Costurado/Soldado</label>
     </div>
-
     <button class="btn-calcular" onclick="calcularTarja()">Calcular</button>
     <button class="btn-limpar" onclick="limparTarja()">Limpar</button>
-
     <div class="resultado" id="resultadoTarja"></div>
   </div>
 
-  <!-- Calculadora de Manga Dobrável -->
+  <!-- Calculadora Manga Dobrável -->
   <div class="container" id="calcManga">
-    <h3>Calculadora de Manga Dobrável</h3>
-
-    <label for="largManga">Largura da Válvula (cm):</label>
-    <input type="number" id="largManga" placeholder="Digite a largura">
-
+    <h3>Manga Dobrável</h3>
+    <label for="larguraManga">Largura (cm):</label>
+    <input type="number" id="larguraManga" placeholder="Digite a largura">
     <button class="btn-calcular" onclick="calcularManga()">Calcular</button>
     <button class="btn-limpar" onclick="limparManga()">Limpar</button>
-
     <div class="resultado" id="resultadoManga"></div>
+  </div>
+
+  <!-- Calculadora Altura da Válvula -->
+  <div class="container" id="calcValvula">
+    <h3>Altura da Válvula</h3>
+    <div class="checkbox-label">
+      <input type="checkbox" id="checkPerimetro" onchange="alternarOpcaoValvula(this)">
+      <label for="checkPerimetro">Perímetro</label>
+    </div>
+    <div class="checkbox-label">
+      <input type="checkbox" id="checkDiametro" onchange="alternarOpcaoValvula(this)">
+      <label for="checkDiametro">Diâmetro</label>
+    </div>
+    <label for="valorValvula">Valor:</label>
+    <input type="number" id="valorValvula" placeholder="Digite o valor">
+    <button class="btn-calcular" onclick="calcularValvula()">Calcular</button>
+    <button class="btn-limpar" onclick="limparValvula()">Limpar</button>
+    <div class="resultado" id="resultadoValvula"></div>
   </div>
 
   <script>
@@ -184,15 +188,13 @@
       const tubular = document.getElementById("tubular").checked;
 
       if (isNaN(larguraInput) || isNaN(gramaturaInput) || isNaN(velocidade) || larguraInput <= 0 || gramaturaInput <= 0 || velocidade <= 0) {
-        document.getElementById("resultado").innerText = "Por favor, preencha todos os campos com valores válidos.";
+        document.getElementById("resultado").innerText = "Preencha todos os campos corretamente.";
         return;
       }
 
       const largura = (larguraInput * (tubular ? 2 : 1)) / 100;
       const gramatura = gramaturaInput / 1000;
-
-      const resultadoIntermediario = largura * gramatura * velocidade * 60;
-      const resultadoFinal = 1000 / resultadoIntermediario;
+      const resultadoFinal = 1000 / (largura * gramatura * velocidade * 60);
 
       document.getElementById("resultado").innerText = `Resultado final: ${resultadoFinal.toFixed(2)}`;
     }
@@ -243,20 +245,53 @@
     }
 
     function calcularManga() {
-      const largura = parseFloat(document.getElementById("largManga").value);
-
+      const largura = parseFloat(document.getElementById("larguraManga").value);
       if (isNaN(largura) || largura <= 0) {
-        document.getElementById("resultadoManga").innerText = "Insira uma largura válida.";
+        document.getElementById("resultadoManga").innerText = "Informe a largura corretamente.";
         return;
       }
-
       const resultado = ((largura + 3) * 3) / 2;
       document.getElementById("resultadoManga").innerText = `Resultado: ${resultado.toFixed(2)} cm`;
     }
 
     function limparManga() {
-      document.getElementById("largManga").value = '';
+      document.getElementById("larguraManga").value = '';
       document.getElementById("resultadoManga").innerText = '';
+    }
+
+    function alternarOpcaoValvula(marcado) {
+      const outros = ["checkPerimetro", "checkDiametro"].filter(id => id !== marcado.id);
+      outros.forEach(id => document.getElementById(id).checked = false);
+    }
+
+    function calcularValvula() {
+      const valor = parseFloat(document.getElementById("valorValvula").value);
+      const perimetro = document.getElementById("checkPerimetro").checked;
+      const diametro = document.getElementById("checkDiametro").checked;
+
+      if (isNaN(valor) || valor <= 0) {
+        document.getElementById("resultadoValvula").innerText = "Informe o valor corretamente.";
+        return;
+      }
+
+      let resultado;
+      if (perimetro) {
+        resultado = (valor / 2) + 1;
+      } else if (diametro) {
+        resultado = ((valor * 3.1416) / 2) + 1;
+      } else {
+        document.getElementById("resultadoValvula").innerText = "Selecione uma opção.";
+        return;
+      }
+
+      document.getElementById("resultadoValvula").innerText = `Altura estimada: ${resultado.toFixed(2)} cm`;
+    }
+
+    function limparValvula() {
+      document.getElementById("valorValvula").value = '';
+      document.getElementById("checkPerimetro").checked = false;
+      document.getElementById("checkDiametro").checked = false;
+      document.getElementById("resultadoValvula").innerText = '';
     }
   </script>
 </body>
