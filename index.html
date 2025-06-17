@@ -102,8 +102,8 @@
 <body>
   <h2>Calculadoras</h2>
   <div class="nav-buttons">
-    <button onclick="mostrarCalculadora('calcProducao')">Produção lam/TOTvs</button>
-    <button onclick="mostrarCalculadora('calcNova')">Conv. sold/cost</button>
+    <button onclick="mostrarCalculadora('calcProducao')">Produção</button>
+    <button onclick="mostrarCalculadora('calcNova')">Tarja</button>
   </div>
 
   <!-- Calculadora de Produção -->
@@ -129,11 +129,11 @@
     <div class="resultado" id="resultado"></div>
   </div>
 
-  <!-- Convert. sold/costu -->
+  <!-- Calculadora de Tarja -->
   <div class="container" id="calcNova">
     <h3>Calculadora de Tarja</h3>
 
-    <label for="compTarja">Comprimento (cm):</label>
+    <label for="compTarja">Comprimento da Tarja (cm):</label>
     <input type="number" id="compTarja" placeholder="Digite o comprimento">
 
     <label for="largTarja">Largura da Tarja (cm):</label>
@@ -197,19 +197,20 @@
 
     function calcularTarja() {
       const largura = parseFloat(document.getElementById("largTarja").value);
+      const comprimento = parseFloat(document.getElementById("compTarja").value);
       const soldadoCosturado = document.getElementById("soldadoCosturado").checked;
       const costuradoSoldado = document.getElementById("costuradoSoldado").checked;
 
-      if (isNaN(largura) || largura <= 0) {
-        document.getElementById("resultadoTarja").innerText = "Insira uma largura válida.";
+      if (isNaN(largura) || isNaN(comprimento) || largura <= 0 || comprimento <= 0) {
+        document.getElementById("resultadoTarja").innerText = "Insira valores válidos.";
         return;
       }
 
       let resultado;
       if (soldadoCosturado) {
-        resultado = largura + 2;
+        resultado = largura + 2 + comprimento;
       } else if (costuradoSoldado) {
-        resultado = largura - 2;
+        resultado = largura - 2 + comprimento;
       } else {
         document.getElementById("resultadoTarja").innerText = "Selecione uma das opções.";
         return;
