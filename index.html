@@ -85,6 +85,24 @@
       color: #333;
       text-align: center;
     }
+    .formulas {
+      margin-top: 20px;
+      background: #e9ecef;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #444;
+      line-height: 1.5;
+    }
+    .formulas h4 {
+      margin-top: 0;
+      font-weight: bold;
+      color: #222;
+      text-align: center;
+    }
+    .formulas ul {
+      padding-left: 20px;
+    }
   </style>
 </head>
 <body>
@@ -113,6 +131,15 @@
     <button class="btn-calcular" onclick="calcularProducao()">Calcular</button>
     <button class="btn-limpar" onclick="limparProducao()">Limpar</button>
     <div class="resultado" id="resultadoProducao"></div>
+
+    <div class="formulas">
+      <h4>Fórmulas utilizadas</h4>
+      <ul>
+        <li><strong>Largura real (m):</strong> largura × (2 se tubular, senão 1) ÷ 100</li>
+        <li><strong>Gramatura (kg/m²):</strong> gramatura ÷ 1000</li>
+        <li><strong>Produção (unidades/min):</strong> 1000 ÷ (largura_real × gramatura_kg × velocidade × 60)</li>
+      </ul>
+    </div>
   </div>
 
   <!-- TARJA -->
@@ -133,6 +160,14 @@
     <button class="btn-calcular" onclick="calcularTarja()">Calcular</button>
     <button class="btn-limpar" onclick="limparTarja()">Limpar</button>
     <div class="resultado" id="resultadoTarja"></div>
+
+    <div class="formulas">
+      <h4>Fórmulas utilizadas</h4>
+      <ul>
+        <li>Se <em>Soldado/Costurado</em> selecionado: <strong>Resultado = Comprimento + Largura da Tarja + 2</strong></li>
+        <li>Se <em>Costurado/Soldado</em> selecionado: <strong>Resultado = Comprimento - Largura da Tarja - 2</strong></li>
+      </ul>
+    </div>
   </div>
 
   <!-- MANGA DOBRÁVEL -->
@@ -143,6 +178,13 @@
     <button class="btn-calcular" onclick="calcularManga()">Calcular</button>
     <button class="btn-limpar" onclick="limparManga()">Limpar</button>
     <div class="resultado" id="resultadoManga"></div>
+
+    <div class="formulas">
+      <h4>Fórmula utilizada</h4>
+      <ul>
+        <li>Resultado = ((Largura + 3) × 3) ÷ 2</li>
+      </ul>
+    </div>
   </div>
 
   <!-- ALTURA DA VÁLVULA -->
@@ -161,6 +203,15 @@
     <button class="btn-calcular" onclick="calcularValvula()">Calcular</button>
     <button class="btn-limpar" onclick="limparValvula()">Limpar</button>
     <div class="resultado" id="resultadoValvula"></div>
+
+    <div class="formulas">
+      <h4>Fórmulas utilizadas</h4>
+      <ul>
+        <li>Se <em>Perímetro</em> selecionado: <strong>Resultado = (Valor ÷ 2) + 1</strong></li>
+        <li>Se <em>Diâmetro</em> selecionado: <strong>Resultado = (Valor × π) ÷ 2 + 1</strong></li>
+      </ul>
+      <p>Nota: π ≈ 3,1416</p>
+    </div>
   </div>
 
   <!-- SANFONA -->
@@ -171,6 +222,14 @@
     <button class="btn-calcular" onclick="calcularSanfona()">Calcular</button>
     <button class="btn-limpar" onclick="limparSanfona()">Limpar</button>
     <div class="resultado" id="resultadoSanfona"></div>
+
+    <div class="formulas">
+      <h4>Fórmula utilizada</h4>
+      <ul>
+        <li>Resultado = ((Largura - 100) ÷ 2) - 1</li>
+      </ul>
+      <p>Nota: Informe uma largura maior que 100 cm.</p>
+    </div>
   </div>
 
   <script>
