@@ -113,6 +113,7 @@
     <button onclick="mostrarCalculadora('calcManga')">Manga Dobrável</button>
     <button onclick="mostrarCalculadora('calcValvula')">Altura da Válvula</button>
     <button onclick="mostrarCalculadora('calcSanfona')">Sanfona</button>
+    <button onclick="mostrarCalculadora('calcCubagemComparativa')">Cubagem Comparativa</button>
   </div>
 
   <!-- CALCULADORA DE PRODUÇÃO -->
@@ -231,6 +232,42 @@
       <p>Nota: Informe uma largura maior que 100 cm.</p>
     </div>
   </div>
+<!-- CUBAGEM COMPARATIVA -->
+<div class="container" id="calcCubagemComparativa">
+  <h3>Cubagem Comparativa</h3>
+  <h4>Entrada Inicial</h4>
+  <label for="largura1">Largura (cm):</label>
+  <input type="number" id="largura1">
+  <label for="comprimento1">Comprimento útil (cm):</label>
+  <input type="number" id="comprimento1">
+  <label for="valvula1">Válvula (cm):</label>
+  <input type="number" id="valvula1">
+  <label for="fundo1">Fundo (cm):</label>
+  <input type="number" id="fundo1">
+  
+  <h4>Simulação / Comparação</h4>
+  <label for="largura2">Largura (cm):</label>
+  <input type="number" id="largura2">
+  <label for="comprimento2">Comprimento útil (cm):</label>
+  <input type="number" id="comprimento2">
+  <label for="valvula2">Válvula (cm):</label>
+  <input type="number" id="valvula2">
+  <label for="fundo2">Fundo (cm):</label>
+  <input type="number" id="fundo2">
+
+  <button class="btn-calcular" onclick="calcularCubagem()">Calcular</button>
+  <button class="btn-limpar" onclick="limparCubagem()">Limpar</button>
+  
+  <div class="resultado" id="resultadoCubagem"></div>
+
+  <div class="formulas">
+    <h4>Fórmula utilizada</h4>
+    <ul>
+      <li><strong>Cubagem:</strong> (Largura - ((Válvula + Fundo) ÷ 2)) × Comprimento útil × Válvula</li>
+      <li><strong>Comparação:</strong> ((Cubagem 2 - Cubagem 1) ÷ Cubagem 1) × 100</li>
+    </ul>
+  </div>
+</div>
 
   <script>
     function mostrarCalculadora(id) {
@@ -347,6 +384,44 @@
       document.getElementById("larguraSanfona").value = '';
       document.getElementById("resultadoSanfona").innerText = '';
     }
+
+
+    function calcularCubagem() {
+  const l1 = parseFloat(document.getElementById("largura1").value);
+  const c1 = parseFloat(document.getElementById("comprimento1").value);
+  const v1 = parseFloat(document.getElementById("valvula1").value);
+  const f1 = parseFloat(document.getElementById("fundo1").value);
+  const l2 = parseFloat(document.getElementById("largura2").value);
+  const c2 = parseFloat(document.getElementById("comprimento2").value);
+  const v2 = parseFloat(document.getElementById("valvula2").value);
+  const f2 = parseFloat(document.getElementById("fundo2").value);
+
+  if ([l1, c1, v1, f1, l2, c2, v2, f2].some(v => isNaN(v))) {
+    document.getElementById("resultadoCubagem").innerText = "Preencha todos os campos corretamente.";
+    return;
+  }
+
+  const cub1 = (l1 - ((v1 + f1) / 2)) * c1 * v1;
+  const cub2 = (l2 - ((v2 + f2) / 2)) * c2 * v2;
+  const perc = ((cub2 - cub1) / cub1) * 100;
+
+  const resultado = `
+    Cubagem Inicial: ${cub1.toFixed(2)}<br>
+    Cubagem Simulada: ${cub2.toFixed(2)}<br>
+    Diferença: ${perc.toFixed(2)}%
+  `;
+
+  document.getElementById("resultadoCubagem").innerHTML = resultado;
+}
+
+function limparCubagem() {
+  ["largura1", "comprimento1", "valvula1", "fundo1",
+   "largura2", "comprimento2", "valvula2", "fundo2"].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById("resultadoCubagem").innerText = '';
+}
+
   </script>
 </body>
 </html>
